@@ -1,0 +1,30 @@
+{
+  "category": "Science",
+  "version": 1,
+  "questions": [
+    {
+      "id": "sci_0001",
+      "category_path": "Science > Physics > Motion",
+      "question": "গতির প্রথম সূত্র কে আবিষ্কার করেন?",
+      "options": ["আইনস্টাইন", "নিউটন", "গ্যালিলিও", "কেপলার"],
+      "correct_answer_index": 1,
+      "explanation": "স্যার আইজ্যাক নিউটন গতির তিনটি সূত্র প্রণয়ন করেছিলেন।"
+    },
+    {
+      "id": "sci_0002",
+      "category_path": "Science > Biology > Cell",
+      "question": "কোষের 'পাওয়ার হাউজ' কাকে বলা হয়?",
+      "options": ["নিউক্লিয়াস", "রাইবোজোম", "মাইটোকন্ড্রিয়া", "সাইটোপ্লাজম"],
+      "correct_answer_index": 2,
+      "explanation": "মাইটোকন্ড্রিয়া শক্তি (ATP) উৎপাদন করে, তাই একে কোষের পাওয়ার হাউজ বলা হয়।"
+    },
+    {
+      "id": "sci_0003",
+      "category_path": "Science > Chemistry > Elements",
+      "question": "পানির রাসায়নিক সংকেত কী?",
+      "options": ["CO2", "H2O", "O2", "NaCl"],
+      "correct_answer_index": 1,
+      "explanation": "পানি দুটি হাইড্রোজেন এবং একটি অক্সিজেন পরমাণু দিয়ে গঠিত, তাই সংকেত H2O।"
+    }
+  ]
+}

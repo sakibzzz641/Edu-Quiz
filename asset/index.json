@@ -1,0 +1,6 @@
+{
+  "categories": [
+    { "name": "English", "file": "english.json", "version": 1 },
+    { "name": "Science", "file": "science.json", "version": 1 }
+  ]
+}

@@ -1,0 +1,46 @@
+{
+  "category": "English",
+  "version": 1,
+  "questions": [
+    {
+      "id": "eng_0001",
+      "category_path": "English > Grammar > Parts of Speech > Noun",
+      "question": "নিচের কোনটি Noun?",
+      "options": ["Run", "Beautiful", "Dhaka", "Quickly"],
+      "correct_answer_index": 2,
+      "explanation": "Dhaka একটি শহরের নাম, তাই এটি Proper Noun।"
+    },
+    {
+      "id": "eng_0002",
+      "category_path": "English > Grammar > Parts of Speech > Noun",
+      "question": "'Honesty' কোন ধরনের Noun?",
+      "options": ["Proper Noun", "Common Noun", "Abstract Noun", "Collective Noun"],
+      "correct_answer_index": 2,
+      "explanation": "'Honesty' একটি গুণ (quality) বোঝায়, যা ছোঁয়া বা দেখা যায় না, তাই এটি Abstract Noun।"
+    },
+    {
+      "id": "eng_0003",
+      "category_path": "English > Grammar > Parts of Speech > Verb",
+      "question": "নিচের কোনটি Verb?",
+      "options": ["Table", "Jump", "Slow", "Happiness"],
+      "correct_answer_index": 1,
+      "explanation": "'Jump' একটি কাজ বোঝায় (action), তাই এটি Verb।"
+    },
+    {
+      "id": "eng_0004",
+      "category_path": "English > Grammar > Parts of Speech > Adjective",
+      "question": "'Beautiful' শব্দটি কোন Part of Speech?",
+      "options": ["Noun", "Verb", "Adjective", "Adverb"],
+      "correct_answer_index": 2,
+      "explanation": "'Beautiful' একটি Noun কে বর্ণনা করছে, তাই এটি Adjective।"
+    },
+    {
+      "id": "eng_0005",
+      "category_path": "English > Vocabulary > Synonyms",
+      "question": "'Happy' এর Synonym কোনটি?",
+      "options": ["Sad", "Angry", "Joyful", "Tired"],
+      "correct_answer_index": 2,
+      "explanation": "'Joyful' শব্দটির অর্থও 'খুশি', তাই এটি 'Happy' এর Synonym।"
+    }
+  ]
+}
