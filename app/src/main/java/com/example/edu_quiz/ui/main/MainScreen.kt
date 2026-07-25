@@ -302,9 +302,7 @@ fun MainScreen(
           }
         } else {
           // Render Category Tree as expandable lists
-          val flatTree = remember(categories, expandedStates) {
-            buildFlatTree(categories, expandedStates)
-          }
+          val flatTree = buildFlatTree(categories, expandedStates)
 
           Box(modifier = Modifier.weight(1f)) {
             LazyColumn(

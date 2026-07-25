@@ -1,5 +1,6 @@
 package com.example.edu_quiz.ui.main
 
+import android.util.Log
 import androidx.compose.runtime.mutableStateListOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -48,6 +49,15 @@ class MainScreenViewModel(private val repository: DataRepository) : ViewModel() 
         _syncState.value = SyncUiState.Loading(progress)
       }.onSuccess {
         _syncState.value = SyncUiState.Success
+        // Debug log of all categories after sync
+        viewModelScope.launch {
+          try {
+            val cats = repository.getAllCategories()
+            Log.d("SyncDebug", "Categories after sync: $cats")
+          } catch (e: Exception) {
+            Log.e("SyncDebug", "Failed to fetch categories: ${e.message}")
+          }
+        }
       }.onFailure { throwable ->
         _syncState.value = SyncUiState.Error(throwable.message ?: "Unknown sync error")
       }

@@ -21,6 +21,7 @@ import okhttp3.Request
 import java.io.IOException
 
 interface DataRepository {
+  suspend fun getAllCategories(): List<com.example.edu_quiz.data.local.CategoryEntity>
   val categories: Flow<List<CategoryEntity>>
   val wrongAnswersCount: Flow<Int>
   val attempts: Flow<List<QuizAttemptEntity>>
@@ -116,6 +117,10 @@ class DefaultDataRepository(context: Context) : DataRepository {
       dao.insertSetting(AppSettingsEntity(KEY_BASE_URL, url))
     }
   }
+
+    override suspend fun getAllCategories(): List<CategoryEntity> = withContext(Dispatchers.IO) {
+        dao.getAllCategories()
+    }
 
   override suspend fun syncData(onProgress: (String) -> Unit): Result<Unit> = withContext(Dispatchers.IO) {
     try {
