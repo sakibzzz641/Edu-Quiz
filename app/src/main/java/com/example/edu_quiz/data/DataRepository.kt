@@ -189,6 +189,12 @@ class DefaultDataRepository(context: Context) : DataRepository {
       }
 
       onProgress("Sync complete!")
+      // Debug log of categories
+      val allCats = dao.getAllCategories()
+      android.util.Log.d("SyncDebug", "All categories after sync: ${allCats.size}")
+      allCats.forEach { cat ->
+          android.util.Log.d("SyncDebug", "Category id=${cat.id}, name=${cat.name}, parentId=${cat.parentId}, fullPath=${cat.fullPath}")
+      }
       Result.success(Unit)
     } catch (e: Exception) {
       Result.failure(e)

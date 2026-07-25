@@ -44,6 +44,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableStateSetOf
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -90,8 +91,8 @@ fun MainScreen(
   val syncState by viewModel.syncState.collectAsState()
   val selectedIds = viewModel.selectedCategoryIds
 
-  // Map to store expanded states of category IDs
-  val expandedStates = remember { mutableStateMapOf<Long, Boolean>() }
+  // Set to store IDs of expanded categories
+  val expandedIds = remember { mutableStateSetOf<Long>() }
 
   Scaffold(
     topBar = {
@@ -302,7 +303,7 @@ fun MainScreen(
           }
         } else {
           // Render Category Tree as expandable lists
-          val flatTree = buildFlatTree(categories, expandedStates)
+          val flatTree = buildFlatTree(categories, expandedIds)
 
           Box(modifier = Modifier.weight(1f)) {
             LazyColumn(
@@ -315,9 +316,13 @@ fun MainScreen(
                   onCheckedChange = {
                     toggleCategoryAndDescendants(node.category.id, categories, viewModel)
                   },
-                  isExpanded = expandedStates[node.category.id] ?: false,
+                  isExpanded = expandedIds.contains(node.category.id),
                   onToggleExpand = {
-                    expandedStates[node.category.id] = !(expandedStates[node.category.id] ?: false)
+                    if (expandedIds.contains(node.category.id)) {
+                      expandedIds.remove(node.category.id)
+                    } else {
+                      expandedIds.add(node.category.id)
+                    }
                   },
                   repository = repository
                 )
@@ -374,7 +379,7 @@ data class TreeRowNode(
 
 private fun buildFlatTree(
   categories: List<CategoryEntity>,
-  expandedStates: Map<Long, Boolean>
+  expandedIds: Set<Long>
 ): List<TreeRowNode> {
   val result = mutableListOf<TreeRowNode>()
   
@@ -384,7 +389,7 @@ private fun buildFlatTree(
       val hasChildren = categories.any { it.parentId == child.id }
       result.add(TreeRowNode(child, level, hasChildren))
       
-      val isExpanded = expandedStates[child.id] ?: false
+      val isExpanded = expandedIds.contains(child.id)
       if (isExpanded && hasChildren) {
         recurse(child.id, level + 1)
       }
