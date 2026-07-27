@@ -27,7 +27,7 @@ import androidx.compose.material.icons.filled.History
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.Settings as SettingsIcon
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
@@ -36,6 +36,9 @@ import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.ui.draw.drawBehind
+import androidx.compose.ui.unit.*
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.material3.TopAppBar
@@ -62,6 +65,7 @@ import androidx.navigation3.runtime.NavKey
 import com.example.edu_quiz.Leaderboard
 import com.example.edu_quiz.PracticeMistakes
 import com.example.edu_quiz.QuizPlay
+import com.example.edu_quiz.StudyContent
 import com.example.edu_quiz.Settings
 
 import com.example.edu_quiz.data.local.CategoryEntity
@@ -118,7 +122,7 @@ fun MainScreen(
             Icon(Icons.Default.Refresh, contentDescription = "Sync", tint = TextLight)
           }
           IconButton(onClick = { onItemClick(Settings) }) {
-            Icon(Icons.Default.Settings, contentDescription = "Settings", tint = TextLight)
+            Icon(Icons.Default.SettingsIcon, contentDescription = "Settings", tint = TextLight)
           }
         },
         colors = TopAppBarDefaults.topAppBarColors(
@@ -324,6 +328,7 @@ fun MainScreen(
                       expandedIds.add(node.category.id)
                     }
                   },
+                  onReadClick = { onItemClick(StudyContent(node.category.id, node.category.name)) },
                   repository = repository
                 )
               }
@@ -433,16 +438,31 @@ fun CategoryRow(
   onCheckedChange: () -> Unit,
   isExpanded: Boolean,
   onToggleExpand: () -> Unit,
+  onReadClick: () -> Unit,
   repository: com.example.edu_quiz.data.DataRepository
 ) {
-  val paddingStart = (node.level * 20).dp
+  val paddingStart = (node.level * 16).dp
+  val cardShape = if (node.level > 0) RoundedCornerShape(12.dp) else RoundedCornerShape(16.dp)
   val rotation by animateFloatAsState(targetValue = if (isExpanded) 180f else 0f, label = "arrow_rot")
 
   GlassCard(
     modifier = Modifier
       .fillMaxWidth()
       .padding(start = paddingStart)
-      .animateContentSize()
+      .drawBehind {
+        if (node.level > 0) {
+          // vertical guide line
+          val lineX = 0f + 8.dp.toPx() // offset a bit from left edge
+          drawLine(
+            color = Color(0x33FFFFFF),
+            start = androidx.compose.ui.geometry.Offset(x = lineX, y = 0f),
+            end = androidx.compose.ui.geometry.Offset(x = lineX, y = size.height),
+            strokeWidth = 1.dp.toPx()
+          )
+        }
+      }
+      .animateContentSize(),
+    shape = cardShape
   ) {
     Row(
       modifier = Modifier
@@ -485,7 +505,7 @@ fun CategoryRow(
         hasStudyContent.value = content != null
       }
       if (hasStudyContent.value) {
-        IconButton(onClick = { /* TODO: navigate to StudyContentScreen */ }) {
+        IconButton(onClick = onReadClick) {
           Icon(Icons.Default.MenuBook, contentDescription = "Read", tint = AccentPurple)
         }
       }
