@@ -96,4 +96,5 @@ dependencies {
   // OkHttp & Serialization
   implementation(libs.okhttp)
   implementation(libs.kotlinx.serialization.json)
+    implementation("com.mikepenz:multiplatform-markdown-renderer-m3:0.24.0")
 }

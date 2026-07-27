@@ -20,6 +20,8 @@ import com.example.edu_quiz.ui.leaderboard.LeaderboardScreen
 import com.example.edu_quiz.ui.main.MainScreen
 import com.example.edu_quiz.ui.mistakes.WrongAnswersScreen
 import com.example.edu_quiz.ui.quiz.QuizScreen
+import com.example.edu_quiz.ui.study.StudyContentScreen
+import com.example.edu_quiz.StudyContent
 import com.example.edu_quiz.ui.quiz.QuizResultScreen
 import com.example.edu_quiz.ui.settings.SettingsScreen
 
@@ -120,6 +122,16 @@ fun MainNavigation() {
           onBackClick = { backStack.removeLastOrNull() },
           repository = repository,
           modifier = Modifier.safeDrawingPadding()
+        )
+      }
+
+      // Study content screen
+      entry<StudyContent> { key ->
+        StudyContentScreen(
+            categoryId = key.categoryId,
+            categoryName = key.categoryName,
+            repository = repository,
+            onBack = { backStack.removeLastOrNull() }
         )
       }
 

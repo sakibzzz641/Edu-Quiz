@@ -16,6 +16,7 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.withContext
 import kotlinx.serialization.json.Json
+import com.example.edu_quiz.data.network.StudyIndexJson
 import okhttp3.OkHttpClient
 import okhttp3.Request
 import java.io.IOException
@@ -152,14 +153,12 @@ class DefaultDataRepository(context: Context) : DataRepository {
           
           val catResponse = client.newCall(catRequest).execute()
           if (!catResponse.isSuccessful) {
-            // Log warning or fail
             continue
           }
 
           val catBody = catResponse.body?.string() ?: continue
           val categoryData = jsonParser.decodeFromString<CategoryQuestionsJson>(catBody)
 
-          // Run inside a database operation
           val questionEntities = mutableListOf<QuestionEntity>()
           for (q in categoryData.questions) {
             val leafId = resolveOrCreateCategoryTree(q.categoryPath)
@@ -178,17 +177,49 @@ class DefaultDataRepository(context: Context) : DataRepository {
             )
           }
 
-          // Insert questions
           if (questionEntities.isNotEmpty()) {
             dao.insertQuestions(questionEntities)
           }
 
-          // Update Sync Meta
           dao.insertSyncMeta(SyncMetaEntity(cat.name, cat.version))
         }
       }
 
-      onProgress("Sync complete!")
+        onProgress("Fetching study_index.json...")
+        val studyRequest = Request.Builder()
+            .url(baseUrl + "study_index.json")
+            .build()
+        val studyResponse = client.newCall(studyRequest).execute()
+        if (studyResponse.isSuccessful) {
+            val studyBody = studyResponse.body?.string() ?: ""
+            if (studyBody.isNotEmpty()) {
+                val studyIndex = jsonParser.decodeFromString<StudyIndexJson>(studyBody)
+                for (topic in studyIndex.topics) {
+                    val syncKey = "study_" + topic.categoryPath
+                    val localVersion = dao.getSyncedVersion(syncKey) ?: 0
+                    if (localVersion < topic.version) {
+                        onProgress("Downloading study content for ${topic.categoryPath}...")
+                        val contentRequest = Request.Builder()
+                            .url(baseUrl + topic.file)
+                            .build()
+                        val contentResponse = client.newCall(contentRequest).execute()
+                        if (contentResponse.isSuccessful) {
+                            val mdContent = contentResponse.body?.string() ?: ""
+                            val catId = resolveOrCreateCategoryTree(topic.categoryPath)
+                            dao.insertStudyContent(
+                                StudyContentEntity(
+                                    categoryId = catId,
+                                    markdownContent = mdContent,
+                                    version = topic.version
+                                )
+                            )
+                            dao.insertSyncMeta(SyncMetaEntity(syncKey, topic.version))
+                        }
+                    }
+                }
+            }
+        }
+        onProgress("Sync complete!")
       // Debug log of categories
       val allCats = dao.getAllCategories()
       android.util.Log.d("SyncDebug", "All categories after sync: ${allCats.size}")

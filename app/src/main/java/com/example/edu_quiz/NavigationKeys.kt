@@ -28,3 +28,5 @@ data object Leaderboard : NavKey
 
 @Serializable
 data object Settings : NavKey
+@Serializable
+data class StudyContent(val categoryId: Long, val categoryName: String) : NavKey
